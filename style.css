@@ -1,0 +1,6 @@
+/* Custom Scrollbar & Utility */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #F8F6F0; }
+        ::-webkit-scrollbar-thumb { background: #B7CDB7; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #236B57; }
+        [x-cloak] { display: none !important; }
