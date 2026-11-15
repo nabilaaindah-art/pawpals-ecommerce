@@ -132,12 +132,16 @@
                     </button>
 
                     <!-- Multi-Role Account Menu -->
-                    <div x-show="!isLoggedIn">
+                    <div x-show="!isLoggedIn && !isAdminLoggedIn">
                         <button @click="navigate('login')"
                                 class="px-4 py-2 rounded-xl bg-paw-teal text-white text-xs font-bold hover:bg-paw-forest transition">
-                            Masuk
+                            Masuk Buyer
                         </button>
                     </div>
+                    <button x-show="isAdminLoggedIn" @click="navigate('admin')"
+                            class="px-4 py-2 rounded-xl bg-paw-charcoal text-white text-xs font-bold hover:bg-paw-teal transition">
+                        Admin Control
+                    </button>
                     <div x-show="isLoggedIn" x-data="{ open: false }" class="relative">
                         <button @click="open = !open" type="button"
                                 class="flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-2xl border border-stone-200 hover:bg-paw-cream transition">
@@ -154,7 +158,7 @@
                         <div x-show="open" @click.away="open = false" x-transition x-cloak
                              class="absolute right-0 mt-2 w-64 rounded-2xl bg-white shadow-xl border border-stone-200 py-2 z-50">
                             <div class="px-4 py-2.5 border-b border-stone-100">
-                                <p class="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Akses Ekosistem (1 Akun)</p>
+                                <p class="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">Akun Buyer</p>
                                 <p class="text-xs font-bold text-paw-teal mt-0.5">nabila.indah@pawpals.id</p>
                             </div>
                             <button @click="navigate('account', 'overview'); open = false"
@@ -162,10 +166,10 @@
                                 <span class="flex items-center gap-2.5 font-medium"><i data-lucide="user" class="w-4 h-4 text-paw-forest"></i> Buyer Dashboard</span>
                                 <span class="text-[10px] px-2 py-0.5 rounded-full bg-paw-cream font-bold text-paw-teal">Member</span>
                             </button>
-                            <button @click="navigate('seller'); open = false"
+                            <button x-show="isAdminLoggedIn" @click="navigate('seller'); open = false"
                                     class="w-full flex items-center justify-between px-4 py-2.5 text-sm hover:bg-paw-cream text-left">
                                 <span class="flex items-center gap-2.5 font-medium"><i data-lucide="store" class="w-4 h-4 text-paw-forest"></i> Seller Workspace</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 font-bold text-emerald-800">Toko Aktif</span>
+                                <span class="text-[10px] px-2 py-0.5 rounded-full bg-paw-teal text-white font-bold">Admin</span>
                             </button>
                             <button @click="navigate('affiliate'); open = false"
                                     class="w-full flex items-center justify-between px-4 py-2.5 text-sm hover:bg-paw-cream text-left">
@@ -214,8 +218,8 @@
                     </template>
                 </div>
                 <div class="flex items-center gap-4 text-[11px]">
-                    <button @click="navigate('seller')" class="text-paw-forest hover:underline font-bold">Jual di PawPals</button>
-                    <span class="text-stone-300">|</span>
+                    <button x-show="isAdminLoggedIn" @click="navigate('seller')" class="text-paw-forest hover:underline font-bold">Seller Workspace</button>
+                    <span x-show="isAdminLoggedIn" class="text-stone-300">|</span>
                     <button @click="navigate('affiliate')" class="text-paw-forest hover:underline font-bold">Program Affiliate</button>
                 </div>
             </div>
@@ -262,10 +266,14 @@
                     </form>
 
                     <div class="mt-6 p-4 rounded-xl bg-paw-cream border border-paw-sage/60 text-sm">
-                        <p class="font-bold text-paw-teal mb-1">Kredensial demo</p>
-                        <p class="text-stone-600">Username: <strong>demo</strong></p>
-                        <p class="text-stone-600">Password: <strong>demo</strong></p>
+                        <p class="font-bold text-paw-teal mb-1">Kredensial Buyer demo</p>
+                        <p class="text-stone-600">Username: <strong>buyer</strong></p>
+                        <p class="text-stone-600">Password: <strong>buyer123</strong></p>
                     </div>
+                    <button @click="navigate('admin-login')"
+                            class="mt-4 w-full py-3 rounded-xl border border-paw-teal text-paw-teal text-sm font-bold hover:bg-paw-cream transition">
+                        Masuk sebagai Admin
+                    </button>
                 </div>
             </section>
         </div>
@@ -279,7 +287,7 @@
                 </div>
                 <p class="text-xs font-bold uppercase tracking-widest text-paw-forest">Verifikasi Admin</p>
                 <h1 class="text-2xl font-extrabold text-paw-teal mt-2">Login Admin Control</h1>
-                <p class="text-sm text-stone-500 mt-1 mb-6">Masuk sekali lagi dengan akun demo yang sama untuk membuka area admin.</p>
+                <p class="text-sm text-stone-500 mt-1 mb-6">Gunakan kredensial Admin untuk membuka Admin Control dan Seller Workspace.</p>
 
                 <form @submit.prevent="adminLogin()" class="space-y-4">
                     <div>
@@ -300,10 +308,10 @@
                 </form>
 
                 <div class="mt-5 p-4 rounded-xl bg-paw-cream border border-paw-sage/60 text-sm">
-                    <p class="font-bold text-paw-teal mb-1">Kredensial demo yang sama</p>
-                    <p class="text-stone-600">Username: <strong>demo</strong> · Password: <strong>demo</strong></p>
+                    <p class="font-bold text-paw-teal mb-1">Kredensial Admin demo</p>
+                    <p class="text-stone-600">Username: <strong>admin</strong> · Password: <strong>admin123</strong></p>
                 </div>
-                <button @click="navigate('home')" class="mt-5 text-sm font-bold text-paw-forest hover:underline">Kembali ke beranda</button>
+                <button @click="navigate('login')" class="mt-5 text-sm font-bold text-paw-forest hover:underline">Kembali ke login Buyer</button>
             </div>
         </section>
     </main>
@@ -1210,10 +1218,16 @@
                 <span class="text-xs font-bold text-paw-orange uppercase tracking-wider">Seller Workspace</span>
                 <h1 class="text-xl sm:text-2xl font-extrabold mt-1">PawPals Official Supply Store</h1>
             </div>
-            <button @click="sellerAddModal = true"
-                    class="px-4 py-2.5 rounded-xl bg-paw-orange text-paw-charcoal font-extrabold text-xs sm:text-sm hover:brightness-105">
-                + Tambah Produk Baru
-            </button>
+            <div class="flex flex-wrap gap-2">
+                <button @click="navigate('admin')"
+                        class="px-4 py-2.5 rounded-xl bg-white/10 text-white font-bold text-xs sm:text-sm hover:bg-white/20 transition">
+                    Kembali ke Admin Control
+                </button>
+                <button @click="sellerAddModal = true"
+                        class="px-4 py-2.5 rounded-xl bg-paw-orange text-paw-charcoal font-extrabold text-xs sm:text-sm hover:brightness-105">
+                    + Tambah Produk Baru
+                </button>
+            </div>
         </div>
 
         <!-- Metrik Toko -->
@@ -1355,6 +1369,10 @@
                 <button @click="openAdminProductModal()"
                         class="px-4 py-2.5 rounded-xl bg-paw-orange text-paw-charcoal font-extrabold text-xs sm:text-sm hover:brightness-105 transition">
                     + Input Produk, Stok &amp; Gambar
+                </button>
+                <button @click="navigate('seller')"
+                        class="px-4 py-2.5 rounded-xl bg-white/10 text-white font-bold text-xs sm:text-sm hover:bg-white/20 transition">
+                    Seller Workspace
                 </button>
                 <button @click="logoutAdmin()"
                         class="px-4 py-2.5 rounded-xl bg-white/10 text-white font-bold text-xs sm:text-sm hover:bg-white/20 transition">
@@ -1630,7 +1648,7 @@
                 <h3 class="font-bold text-xs uppercase tracking-wider text-paw-orange mb-3">Portal Ekosistem</h3>
                 <ul class="space-y-2 text-xs sm:text-sm text-stone-200">
                     <li><button @click="navigate('account', 'overview')" class="hover:text-white">Buyer Dashboard</button></li>
-                    <li><button @click="navigate('seller')" class="hover:text-white">Seller Workspace</button></li>
+                    <li x-show="isAdminLoggedIn"><button @click="navigate('seller')" class="hover:text-white">Seller Workspace</button></li>
                     <li><button @click="navigate('affiliate')" class="hover:text-white">Affiliate Portal</button></li>
                     <li><button @click="navigate('admin')" class="hover:text-white">Admin Panel</button></li>
                 </ul>

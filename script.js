@@ -414,7 +414,7 @@ function pawPalsApp() {
                 },
 
                 login() {
-                    if (this.loginForm.username.trim() !== 'demo' || this.loginForm.password !== 'demo') {
+                    if (this.loginForm.username.trim() !== 'buyer' || this.loginForm.password !== 'buyer123') {
                         this.showToast('Username atau password tidak sesuai.', 'error');
                         return;
                     }
@@ -426,12 +426,7 @@ function pawPalsApp() {
                 },
 
                 adminLogin() {
-                    if (!this.isLoggedIn) {
-                        this.activePage = 'login';
-                        this.showToast('Silakan masuk terlebih dahulu.', 'error');
-                        return;
-                    }
-                    if (this.adminLoginForm.username.trim() !== 'demo' || this.adminLoginForm.password !== 'demo') {
+                    if (this.adminLoginForm.username.trim() !== 'admin' || this.adminLoginForm.password !== 'admin123') {
                         this.showToast('Username atau password admin tidak sesuai.', 'error');
                         return;
                     }
@@ -454,8 +449,9 @@ function pawPalsApp() {
 
                 logoutAdmin() {
                     this.isAdminLoggedIn = false;
-                    this.navigate('home');
-                    this.showToast('Anda telah keluar dari Admin Control.');
+                    this.activePage = this.isLoggedIn ? 'home' : 'login';
+                    this.showToast('Sesi Admin Control telah berakhir.');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 },
 
                 saveBuyerAddress() {
@@ -506,14 +502,19 @@ function pawPalsApp() {
 
                 navigate(page, tab = null) {
                     if (page === 'login') {
-                        this.activePage = this.isLoggedIn ? 'home' : 'login';
-                    } else if (!this.isLoggedIn) {
-                        this.activePage = 'login';
-                        this.showToast('Silakan masuk terlebih dahulu untuk melanjutkan.', 'error');
-                    } else if (page === 'admin' && !this.isAdminLoggedIn) {
-                        this.activePage = 'admin-login';
+                        this.activePage = this.isLoggedIn ? 'home' : (this.isAdminLoggedIn ? 'admin' : 'login');
                     } else if (page === 'admin-login') {
                         this.activePage = this.isAdminLoggedIn ? 'admin' : 'admin-login';
+                    } else if (page === 'seller' || page === 'admin') {
+                        if (!this.isAdminLoggedIn) {
+                            this.activePage = 'admin-login';
+                            this.showToast('Login Admin diperlukan untuk membuka area ini.', 'error');
+                        } else {
+                            this.activePage = page;
+                        }
+                    } else if (!this.isLoggedIn) {
+                        this.activePage = this.isAdminLoggedIn ? 'admin' : 'login';
+                        this.showToast('Silakan masuk sebagai Buyer untuk melanjutkan.', 'error');
                     } else {
                         this.activePage = page;
                     }
